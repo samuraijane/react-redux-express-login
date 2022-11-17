@@ -10,8 +10,8 @@ const doLogin = async (password, username) => {
   };
 
   const response = await fetch('http://localhost:8080/auth/login', options);
-  const data = response.isSuccess;
-  return await data;
+  const data = await response.json();
+  return await data.isSuccess;
 };
 
 export const verifyAuthentication = createAsyncThunk('auth/verify', async ({password, token, username}) => {
