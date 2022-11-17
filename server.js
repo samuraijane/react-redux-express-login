@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const path = require('path');
@@ -5,6 +6,11 @@ const { User } = require('./models');
 
 const server = express();
 
+const corsOptions = {
+  origin: 'http://localhost:3000'
+};
+
+server.use(cors(corsOptions));
 server.use(express.json());
 server.use(express.static(path.resolve(`${__dirname}/react-ui/build`)));
 
