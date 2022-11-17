@@ -8,7 +8,10 @@ server.use(express.json());
 
 const createAuthToken = user => {
   return jwt.sign(
-    {login: Date.now()},
+    {
+      id: user.id,
+      login: Date.now()
+    },
     'secret',
     {
       algorithm: 'HS256',
@@ -33,6 +36,19 @@ server.post('/login', async (req, res) => {
   if (user) {
     const token = createAuthToken(user);
     res.json({isSuccess: true, token});
+  } else {
+    res.json({isSuccess: false});
+  }
+});
+
+server.get('/profile/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findOne({
+    where: { id }
+  });
+  if (user) {
+    const { email, firstName, lastName, username } = user;
+    res.json({isSuccess: true, user: {email, firstName, lastName, username}});
   } else {
     res.json({isSuccess: false});
   }
