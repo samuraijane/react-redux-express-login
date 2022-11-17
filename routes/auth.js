@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../models');
 const { createAuthToken } = require('../utils');
+const { ensureAuthentication } = require('../middleware');
 
 router.post('/login', async (req, res) => {
   const { password, username } = req.body;
@@ -16,6 +17,10 @@ router.post('/login', async (req, res) => {
   } else {
     res.json({isSuccess: false});
   }
+});
+
+router.post('/verify', ensureAuthentication, (req, res) => {
+  res.json({isSuccess: true});
 });
 
 module.exports = router;
