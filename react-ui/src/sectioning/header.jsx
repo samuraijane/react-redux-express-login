@@ -1,6 +1,8 @@
 const Header = () => (
   <header>
-    I am header
+    <div className="y-wrap">
+      I am header
+    </div>
   </header>
 );
 

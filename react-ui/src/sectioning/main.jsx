@@ -1,6 +1,8 @@
 const Main = () => (
   <main>
-    I am main
+    <div className="y-wrap">
+      I am main
+    </div>
   </main>
 );
 
