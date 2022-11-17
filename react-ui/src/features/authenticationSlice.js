@@ -14,6 +14,20 @@ const doLogin = async (password, username) => {
   return await data;
 };
 
+const verifyToken = async (token) => {
+  const options = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST'
+  };
+
+  const response = await fetch('http://localhost:8080/auth/verify', options);
+  const data = await response.json();
+  return data;
+};
+
 export const verifyAuthentication = createAsyncThunk('auth/verify', async ({password, token, username}) => {
   if (!token && password && username) {
     const response = await doLogin(password, username);
@@ -23,9 +37,15 @@ export const verifyAuthentication = createAsyncThunk('auth/verify', async ({pass
     }
     return isSuccess;
   } else if (token) {
-
+    const response = await verifyToken(token);
+    const { isSuccess } = response;
+    if (!isSuccess) {
+      localStorage.removeItem('jwt');
+    }
+    return isSuccess;
   } else {
-
+    localStorage.removeItem('jwt');
+    return false;
   }
 });
 

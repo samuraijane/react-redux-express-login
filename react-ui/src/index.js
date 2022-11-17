@@ -3,11 +3,16 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './app/store';
+import { verifyAuthentication } from './features/authenticationSlice';
 import './style.css';
 import App from './app';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const token = localStorage.getItem('jwt');
+store.dispatch(verifyAuthentication({token}))
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
