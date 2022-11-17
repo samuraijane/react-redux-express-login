@@ -1,17 +1,39 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+const doLogin = async (password, username) => {
+  const options = {
+    body: JSON.stringify({password, username}),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+  };
+
+  const response = await fetch('http://localhost:8080/auth/login', options);
+  const data = response.isSuccess;
+  return await data;
+};
+
+export const verifyAuthentication = createAsyncThunk('auth/verify', async ({password, token, username}) => {
+  if (!token && password && username) {
+    return await doLogin(password, username);
+  } else if (token) {
+
+  } else {
+
+  }
+});
 
 export const authenticationSlice = createSlice({
   name: 'isAuth',
   initialState: false,
-  reducers: {
-    doLogin: (state, actions) => {
-      console.log('a', actions.payload);
-      return true
-    }
+  reducers: {},
+  extraReducers(builder) {
+    builder.addCase(verifyAuthentication.fulfilled, (state, action) => {
+      return action.payload;
+    });
   }
 });
-
-export const { doLogin } = authenticationSlice.actions;
 
 export const selectIsAuth = state => state.isAuth;
 
