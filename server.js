@@ -21,6 +21,26 @@ const createAuthToken = user => {
   );
 };
 
+const ensureAuthentication = (req, res, next) => {
+  const { authorization } = req.headers;
+  const token = authorization && authorization.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({isSuccess: false});
+  }
+
+  try {
+    jwt.verify(token, 'secret');
+  } catch(error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      res.status(401).json({isSuccess: false, message: error.message});
+    } else {
+      res.status(401).json({isSuccess: false, message: 'An error has occurred.'})
+    }
+  }
+  next();
+};
+
 server.get('/heartbeat', (req, res) => {
   res.json({is: 'working'});
 });
@@ -41,7 +61,7 @@ server.post('/login', async (req, res) => {
   }
 });
 
-server.get('/profile/:id', async (req, res) => {
+server.get('/profile/:id', ensureAuthentication, async (req, res) => {
   const { id } = req.params;
   const user = await User.findOne({
     where: { id }
