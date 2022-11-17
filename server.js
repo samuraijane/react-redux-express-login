@@ -47,7 +47,7 @@ server.get('/heartbeat', (req, res) => {
   res.json({is: 'working'});
 });
 
-server.post('auth/login', async (req, res) => {
+server.post('/auth/login', async (req, res) => {
   const { password, username } = req.body;
   const user = await User.findOne({
     where: {
@@ -63,7 +63,7 @@ server.post('auth/login', async (req, res) => {
   }
 });
 
-server.get('api/profile/:id', ensureAuthentication, async (req, res) => {
+server.get('/api/profile/:id', ensureAuthentication, async (req, res) => {
   const { id } = req.params;
   const user = await User.findOne({
     where: { id }
