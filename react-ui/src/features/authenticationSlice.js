@@ -11,12 +11,17 @@ const doLogin = async (password, username) => {
 
   const response = await fetch('http://localhost:8080/auth/login', options);
   const data = await response.json();
-  return await data.isSuccess;
+  return await data;
 };
 
 export const verifyAuthentication = createAsyncThunk('auth/verify', async ({password, token, username}) => {
   if (!token && password && username) {
-    return await doLogin(password, username);
+    const response = await doLogin(password, username);
+    const { isSuccess, token } = response;
+    if (isSuccess && token) {
+      localStorage.setItem('jwt', token);
+    }
+    return isSuccess;
   } else if (token) {
 
   } else {
