@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { doLogin } from '../features/authenticationSlice';
+import { verifyAuthentication } from '../features/authenticationSlice';
 
 const Login = () => {
   const [creds, setCreds] = useState({});
@@ -16,7 +16,7 @@ const Login = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch(doLogin(creds));
+    dispatch(verifyAuthentication(creds));
     setCreds({});
   };
 
