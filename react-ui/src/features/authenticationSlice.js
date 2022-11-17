@@ -4,7 +4,10 @@ export const authenticationSlice = createSlice({
   name: 'isAuth',
   initialState: false,
   reducers: {
-    doLogin: state => true
+    doLogin: (state, actions) => {
+      console.log('a', actions.payload);
+      return true
+    }
   }
 });
 
