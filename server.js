@@ -1,10 +1,12 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const { User } = require('./models');
 
 const server = express();
 
 server.use(express.json());
+server.use(express.static(path.resolve(`${__dirname}/react-ui/build`)));
 
 const createAuthToken = user => {
   return jwt.sign(
@@ -72,6 +74,10 @@ server.get('/profile/:id', ensureAuthentication, async (req, res) => {
   } else {
     res.json({isSuccess: false});
   }
+});
+
+server.get('*', (req, res) => {
+  res.sendFile(path.resolve(`${__dirname}/react-ui/build/index.html`));
 });
 
 server.listen(8080, () => {
