@@ -1,8 +1,7 @@
+const { apiRouter, authRouter } = require('./routes');
 const cors = require('cors');
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const path = require('path');
-const { User } = require('./models');
 
 const server = express();
 
@@ -10,78 +9,19 @@ const corsOptions = {
   origin: 'http://localhost:3000'
 };
 
+// middleware
 server.use(cors(corsOptions));
 server.use(express.json());
 server.use(express.static(path.resolve(`${__dirname}/react-ui/build`)));
+server.use('/api', apiRouter);
+server.use('/auth', authRouter);
 
-const createAuthToken = user => {
-  return jwt.sign(
-    {
-      id: user.id,
-      login: Date.now()
-    },
-    'secret',
-    {
-      algorithm: 'HS256',
-      expiresIn: 180,
-      subject: user.email
-    }
-  );
-};
-
-const ensureAuthentication = (req, res, next) => {
-  const { authorization } = req.headers;
-  const token = authorization && authorization.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({isSuccess: false});
-  }
-
-  try {
-    jwt.verify(token, 'secret');
-  } catch(error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      res.status(401).json({isSuccess: false, message: error.message});
-    } else {
-      res.status(401).json({isSuccess: false, message: 'An error has occurred.'})
-    }
-  }
-  next();
-};
-
+// test endpoint
 server.get('/heartbeat', (req, res) => {
   res.json({is: 'working'});
 });
 
-server.post('/auth/login', async (req, res) => {
-  const { password, username } = req.body;
-  const user = await User.findOne({
-    where: {
-      password,
-      username
-    }
-  });
-  if (user) {
-    const token = createAuthToken(user);
-    res.json({isSuccess: true, token});
-  } else {
-    res.json({isSuccess: false});
-  }
-});
-
-server.get('/api/profile/:id', ensureAuthentication, async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findOne({
-    where: { id }
-  });
-  if (user) {
-    const { email, firstName, lastName, username } = user;
-    res.json({isSuccess: true, user: {email, firstName, lastName, username}});
-  } else {
-    res.json({isSuccess: false});
-  }
-});
-
+// delegate client-side routing to react
 server.get('*', (req, res) => {
   res.sendFile(path.resolve(`${__dirname}/react-ui/build/index.html`));
 });
