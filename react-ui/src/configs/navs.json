@@ -1,0 +1,26 @@
+[
+  {
+    "href": "/",
+    "isPrivate": true,
+    "isPublic": true,
+    "text": "Home"
+  },
+  {
+    "href": "/login",
+    "isPrivate": false,
+    "isPublic": true,
+    "text": "Login"
+  },
+  {
+    "href": "/logout",
+    "isPrivate": true,
+    "isPublic": false,
+    "text": "Logout"
+  },
+  {
+    "href": "/profile",
+    "isPrivate": true,
+    "isPublic": false,
+    "text": "Profile"
+  }
+]
