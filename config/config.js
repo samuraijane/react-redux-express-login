@@ -1,3 +1,11 @@
+const {
+  PG_DATABASE,
+  PG_HOST,
+  PG_PASSWORD,
+  PG_PORT,
+  PG_USER
+} = process.env;
+
 module.exports = {
   development: {
     username: "admin",
@@ -14,10 +22,10 @@ module.exports = {
     dialect: "postgres"
   },
   production: {
-    username: "root",
-    password: null,
-    database: "react-redux-express-login_prod",
-    host: "127.0.0.1",
+    username: PG_USER,
+    password: PG_PASSWORD,
+    database: PG_DATABASE,
+    host: `${PG_HOST}:${PG_PORT}`,
     dialect: "postgres"
   }
 };
