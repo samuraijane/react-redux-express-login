@@ -9,7 +9,7 @@ const doLogin = async (password, username) => {
     method: 'POST',
   };
 
-  const response = await fetch('http://localhost:8080/auth/login', options);
+  const response = await fetch('/auth/login', options);
   const data = await response.json();
   return await data;
 };
@@ -23,7 +23,7 @@ const verifyToken = async (token) => {
     method: 'POST'
   };
 
-  const response = await fetch('http://localhost:8080/auth/verify', options);
+  const response = await fetch('/auth/verify', options);
   const data = await response.json();
   return data;
 };
